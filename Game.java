@@ -5,3 +5,11 @@ class Spiller {
         this.name = name;
     }
 }
+
+class Konto {
+    private int balance;
+
+    public Konto(int balance) {
+        this.balance = balance;
+    }
+}
