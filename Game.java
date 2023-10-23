@@ -36,9 +36,24 @@ class Spiller {
 }
 
 class Konto {
-    private int balance;
-
+    private boolean isWinner = false;
+    private int balance = 1000;
+    
     public Konto(int balance) {
         this.balance = balance;
     }
+
+    updateBalance(amount) {
+        this.balance += amount;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    if (balance >= 3000) {
+        isWinner = true;
+    }
+
+
 }
