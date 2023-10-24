@@ -27,6 +27,7 @@ class TextString {
     public TextString() {
         new TextString(ENGLISH);
     }
+
     /**
      * @param language
      */
@@ -54,14 +55,16 @@ class Spiller {
     private int sum;
     private Konto ownKonto;
 
-
     public String toString() {
         if (Values.values[sum] == 0)
-            return "Player " + name + " has arrived at " + TextString.felter[sum] + " where they stay for an evening for free.";
+            return "Player " + name + " has arrived at " + TextString.felter[sum]
+                    + " where they stay for an evening for free.";
         else if (Values.values[sum] > 0)
-            return "Player " + name + " has arrived at " + TextString.felter[sum] + " and received " + Values.values[sum] + ".";
+            return "Player " + name + " has arrived at " + TextString.felter[sum] + " and received "
+                    + Values.values[sum] + ".";
         else
-            return "Player " + name + " has arrived at " + TextString.felter[sum] + " and has paid " + Values.values[sum] + " to escape.";
+            return "Player " + name + " has arrived at " + TextString.felter[sum] + " and has paid "
+                    + Values.values[sum] + " to escape.";
     }
 
     public void setKonto(Konto konto) {
@@ -144,4 +147,37 @@ class Konto {
         else
             return "The balance for " + spiller.getName() + " is " + getBalance();
     }
+}
+
+class PlayGame {
+
+    public static void main(String[] argv) {
+        TextString textString = new TextString();
+        Scanner input = new Scanner(System.in);
+        System.out.print("Enter first player name: ");
+        String fname = input.nextLine();
+        Spiller p1 = new Spiller(fname);
+        Konto k1 = new Konto(1000, p1);
+        p1.setKonto(k1);
+        System.out.print("Enter second player name: ");
+        String sname = input.nextLine();
+        Spiller p2 = new Spiller(sname);
+        Konto k2 = new Konto(1000, p2);
+        p2.setKonto(k2);
+        p1.getBalance();
+        p2.getBalance();
+
+        p1.rollDice();
+        System.out.println(p1.toString());
+        k1.updateBalance(Values.values[p1.getSum()]);
+        p1.getBalance();
+        p2.rollDice();
+        System.out.println(p2.toString());
+        k2.updateBalance(Values.values[p2.getSum()]);
+        p2.getBalance();
+
+        input.close();
+
+    }
+
 }
