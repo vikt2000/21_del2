@@ -1,4 +1,4 @@
-class Spiller {
+/* class Spiller {
     private String name;
 
     public Spiller(String name) {
@@ -33,9 +33,9 @@ class Spiller {
     public int getSum() {
         return sum;
     }
-}
+} */
 
-class Konto {
+/* class Konto {
     private boolean isWinner = false;
     private int balance = 1000;
     
@@ -56,4 +56,4 @@ class Konto {
     }
 
 
-}
+} */
