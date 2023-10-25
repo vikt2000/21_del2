@@ -142,12 +142,18 @@ class Konto {
     private Spiller spiller;
 
     public Konto(int balance, Spiller spiller) {
-        this.balance = balance;
+        this.balance = Math.max(balance,0);
         this.spiller = spiller;
     }
 
-    public void updateBalance(int amount) {
-        this.balance += amount;
+    public boolean updateBalance(int amount) {
+        if (amount >= 0) {
+            this.balance += amount;
+            return true;
+        } else {
+            return false;
+        }
+        
     }
 
     public int getBalance() {
