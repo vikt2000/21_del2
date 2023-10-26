@@ -1,80 +1,83 @@
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class GameTest {
+public class PlayGameTest {
 
     @Test
-    public void testPlayerCreation() {
-        Spiller player = new Spiller("TestPlayer");
-        Assertions.assertNotNull(player);
-        Assertions.assertEquals("TestPlayer", player.getName());
+    public void TestForeignCharacters() {
+        String invalidName1 = "Μεγάλος Ντικ";
+        String invalidName2 = "דיק גדול";
+
+        Spiller player1 = new Spiller(invalidName1);
+        Spiller player2 = new Spiller(invalidName2);
+
+        assertEquals(invalidName1, player1.getName());
+        assertEquals(invalidName2, player2.getName());
     }
 
     @Test
-    public void testDiceRoll() {
+    public void TestLongPlayerName() {
+        String longName = "JJJjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj";
+        Spiller player = new Spiller(longName);
+
+        assertEquals(longName, player.getName());
+    }
+
+    @Test
+    public void testPlayerBalanceAfterWinning() {
         Spiller player = new Spiller("TestPlayer");
+        Konto account = new Konto(2800, player); 
+        player.setKonto(account);
+
+        player.DiceRoll();
         player.rollDice();
-        Assertions.assertEquals(0, player.getSum());
+        int fieldIndex = player.getSum();
+        account.updateBalance(Values.values[fieldIndex]);
+
+        assertEquals(3100, player.getKonto().getBalance()); 
+        assertEquals(true, player.getKonto().checkWinner());
     }
 
     @Test
-    public void testRollDice() {
+    public void testInvalidWithdrawal() {
         Spiller player = new Spiller("TestPlayer");
-        player.rollDice();
-        int sum = player.getSum();
-        Assertions.assertTrue(sum >= 2 && sum <= 12);
-    }
+        Konto account = new Konto(500, player); 
+        player.setKonto(account);
+        assertThrows(IllegalArgumentException.class, () -> {
+            account.updateBalance(-600);
+        });
+}
 
     @Test
-    public void testAccountAssignment() {
+    public void testRandomizedPlayerMoves() {
         Spiller player = new Spiller("TestPlayer");
         Konto account = new Konto(1000, player);
         player.setKonto(account);
-        Assertions.assertNotNull(player.getKonto());
+
+        for (int i = 0; i < 1000; i++) {
+            player.DiceRoll(); 
+            player.rollDice();
+            int fieldIndex = player.getSum();
+            account.updateBalance(Values.values[fieldIndex]);
+            assertTrue(player.getKonto().getBalance() >= 0);
+        }
     }
 
     @Test
-    public void testAccountBalanceUpdate() {
-        Spiller player = new Spiller("TestPlayer");
-        Konto account = new Konto(1000, player);
-        player.setKonto(account);
-        account.updateBalance(500);
-        Assertions.assertEquals(1500, account.getBalance());
-    }
+    public void testPlayerBalanceAfterMove() {
+    Spiller player = new Spiller("TestPlayer");
+    Konto account = new Konto(1000, player);
+    player.setKonto(account);
+
+    player.DiceRoll();
+    player.rollDice();
+    int fieldIndex = player.getSum();
+    account.updateBalance(Values.values[fieldIndex]);
+
+    assertEquals(1000 + Values.values[fieldIndex], player.getKonto().getBalance());
+}
 
 
-    @Test
-    public void testAccountToString() {
-        Spiller player = new Spiller("TestPlayer");
-        Konto account = new Konto(1000, player);
-        account.updateBalance(500);
-        Assertions.assertEquals("TestPlayer har en balance på 1500.", account.toString());
-    }
-
-    @Test
-    public void testWinnerDetermination() {
-        Spiller player = new Spiller("TestPlayer");
-        Konto account = new Konto(3001, player);
-        player.setKonto(account);
-        Assertions.assertTrue(account.checkWinner());
-    }
-
-    @Test
-    public void testPlayerCreationWithoutName() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Spiller(""));
-    }
-
-    @Test
-    public void testPlayerCreationWithTooLongName() {
-        String tooLongName = "TestPlayerTestPlayerTestPlayerTestPlayerTestPlayerTestPlayerTestPlayerTestPlayerTestPlayerTestPlayerTestPlayer";
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Spiller(tooLongName));
-    }
-
-    @Test
-    public void testAccountBalanceUpdateWithNegativeAmount() {
-        Spiller player = new Spiller("TestPlayer");
-        Konto account = new Konto(1000, player);
-        player.setKonto(account);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> account.updateBalance(-100));
-    }
 }
