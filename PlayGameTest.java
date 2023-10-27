@@ -67,17 +67,17 @@ public class PlayGameTest {
 
     @Test
     public void testPlayerBalanceAfterMove() {
-    Spiller player = new Spiller("TestPlayer");
-    Konto account = new Konto(1000, player);
-    player.setKonto(account);
+        Spiller player = new Spiller("TestPlayer");
+        Konto account = new Konto(1000, player);
+        player.setKonto(account);
 
-    player.DiceRoll();
-    player.rollDice();
-    int fieldIndex = player.getSum();
-    account.updateBalance(Values.values[fieldIndex]);
+        player.DiceRoll();
+        player.rollDice();
+        int fieldIndex = player.getSum();
+        account.updateBalance(Values.values[fieldIndex]);
 
-    assertEquals(1000 + Values.values[fieldIndex], player.getKonto().getBalance());
+        assertEquals(1000 + Values.values[fieldIndex], player.getKonto().getBalance());
+    }
 }
 
 
-}
